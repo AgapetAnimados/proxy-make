@@ -5,21 +5,28 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Middleware para parsear JSON y evitar errores de CORS
 app.use(cors());
+app.use(express.json());
 
-app.get('/generate-image', async (req, res) => {
+app.post('/proxy', async (req, res) => {
   try {
-    const response = await fetch('const response = await fetch('https://hook.us2.make.com/weibk4d8altifwvj3forbz696u5n7e4j');
+    const response = await fetch('https://hook.us2.make.com/weibk4d8altifwvj3forbz696u5n7e4j', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(req.body),
+    });
 
-');
     const data = await response.json();
-    res.json(data);
+    res.status(200).json(data);
   } catch (error) {
-    console.error('Error al conectar con Make:', error);
-    res.status(500).json({ error: 'Error interno del proxy' });
+    console.error('Error en el proxy:', error);
+    res.status(500).json({ error: 'Error al redirigir la solicitud' });
   }
 });
 
 app.listen(PORT, () => {
-  console.log(`Proxy corriendo en http://localhost:${PORT}`);
+  console.log(`🟢 Servidor corriendo en http://localhost:${PORT}`);
 });
