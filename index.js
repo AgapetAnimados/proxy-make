@@ -1,11 +1,12 @@
 const express = require("express");
 const cors = require("cors");
-const app = express(); // 👈 ESTA LÍNEA ES FUNDAMENTAL
+const app = express();
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-
+// Ruta principal que recibe imageUrl y redirige a Webflow
 app.post("/", (req, res) => {
   const imageUrl = req.body.imageUrl;
 
@@ -16,7 +17,13 @@ app.post("/", (req, res) => {
 
   console.log("🖼️ Imagen recibida:", imageUrl);
 
-  // Redirigir a Webflow con la URL como parámetro
-  const encodedUrl = encodeURIComponent(imageUrl);
-  res.redirect(`https://agapets-dapper-site.webflow.io/espera?image=${encodedUrl}`);
+  // Redirección a Webflow con la imagen como parámetro
+  const redirectUrl = `https://agapets-dapper-site.webflow.io/espera?imagen=${encodeURIComponent(imageUrl)}`;
+  res.redirect(302, redirectUrl);
+});
+
+// Escuchar en el puerto asignado por Render
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });
