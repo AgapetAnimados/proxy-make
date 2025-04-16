@@ -1,32 +1,26 @@
-const express = require('express');
-const fetch = require('node-fetch');
-const cors = require('cors');
-
+const express = require("express");
+const cors = require("cors");
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Middleware para parsear JSON y evitar errores de CORS
-app.use(cors());
-app.use(express.json());
+app.use(cors()); // Habilita CORS
+app.use(express.json()); // Habilita lectura del body en JSON
 
-app.post('/proxy', async (req, res) => {
-  try {
-    const response = await fetch('https://hook.us2.make.com/weibk4d8altifwvj3forbz696u5n7e4j', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(req.body),
-    });
+// Ruta principal que recibe el imageUrl desde Make
+app.post("/", (req, res) => {
+  const imageUrl = req.body.imageUrl;
 
-    const data = await response.json();
-    res.status(200).json(data);
-  } catch (error) {
-    console.error('Error en el proxy:', error);
-    res.status(500).json({ error: 'Error al redirigir la solicitud' });
+  if (!imageUrl) {
+    console.error("❌ No se recibió 'imageUrl'");
+    return res.status(400).json({ error: "Falta el campo 'imageUrl'" });
   }
+
+  console.log("🖼️ Imagen recibida:", imageUrl);
+
+  res.status(200).json({ message: "URL recibida correctamente", imageUrl });
 });
 
+// Puerto donde escucha Render (usa env.PORT)
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
-  console.log(`🟢 Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });
