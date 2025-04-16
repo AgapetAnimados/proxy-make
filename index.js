@@ -1,3 +1,11 @@
+const express = require("express");
+const cors = require("cors");
+const app = express(); // 👈 ESTA LÍNEA ES FUNDAMENTAL
+
+app.use(cors());
+app.use(express.json());
+
+
 app.post("/", (req, res) => {
   const imageUrl = req.body.imageUrl;
 
